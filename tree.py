@@ -2,6 +2,7 @@ from sys import exit
 from time import sleep
 from random import seed, randint
 
+
 class Node:
     def __init__(self, val=None, left=None, right=None):
         self.value = val
@@ -22,8 +23,16 @@ class Tree:
         self.min = None
         self.max = None
 
-    def find_val(self, val):
-        pass
+    def seek(self, val, current):
+        if current:
+            if val == current.value:
+                return True
+            elif val < current.value:
+                return self.seek(val, current.left)
+            elif val > current.value:
+                return self.seek(val, current.right)
+        else:
+            return False
 
     def del_val(self, val):
         pass
@@ -32,12 +41,12 @@ class Tree:
         if self.root == None:
             # No root node; Empty tree
             new_node = Node(val)
-            self.nodes.append(new_node)
+            self.root = new_node
             return
         else:
             # Start search at root node
             current = self.root
-            add_seek(val, current)
+            self.add_seek(val, current)
 
     def add_seek(self, val, current):
         if val == current.value:
@@ -48,24 +57,24 @@ class Tree:
                 current.left = new_node
                 return
             else:
-                add_seek(val, current.left)
+                self.add_seek(val, current.left)
         elif val > current.value:
             if current.right == None:
                 new_node = Node(val)
                 current.right = new_node
                 return
             else:
-                add_seek(val, current.right)
+                self.add_seek(val, current.right)
 
     def inorder(self, node):
         if node:
             self.inorder(node.left)
-            print(node.value, " ")
+            print(node.value, end=" ")
             self.inorder(node.right)
 
     def preorder(self, node):
         if node:
-            print(node.value, " ")
+            print(node.value, end=" ")
             self.preorder(node.left)
             self.preorder(node.right)
 
@@ -73,7 +82,7 @@ class Tree:
         if node:
             self.inorder(node.left)
             self.inorder(node.right)
-            print(node.value, " ")
+            print(node.value, end=" ")
 
     def show(self):
         while True:
@@ -118,32 +127,43 @@ if __name__ == "__main__":
             else:
                 print("Invalid value. Must be {}-999".format(min_val))
         while True:
-            num_nodes = int(input("Set a number of nodes for the tree"))
+            num_nodes = int(input("Set a number of nodes for the tree: "))
             if num_nodes <= (max_val - min_val) and num_nodes > 0:
                 break
             else:
                 print("Invalid value. Must be 1-{}".format(max_val - min_val))
 
-        # Create the tree 
+        # Create the tree
         seed(1)
         node_vals = []
         while len(node_vals) < num_nodes:
             r = randint(min_val, max_val)
             if r not in node_vals:
                 tree.add_val(r)
-        
+                node_vals.append(r)
+        print("Tree created sucessfully")
+        sleep(2)
 
-    def add_val(tree):
+    def add_val():
+        val = input("Enter a value to add to the tree: ")
+        tree.add_val(int(val))
+
+    def del_val():
         pass
 
-    def del_val(tree):
-        pass
+    def find_val():
+        val = input("Enter a value to search for in tree: ")
+        found = tree.seek(int(val), tree.root)
+        if found:
+            print("{} is in the tree".format(val))
+        else:
+            print("{} is not in the tree".format(val))
+        sleep(2)
 
-    def find_val(tree):
-        pass
-
-    def print_tree(tree):
+    def print_tree():
         tree.show()
+        print()
+        input("Press enter to continue.")
 
     menu = {
         "1": ("Create a random tree", create_tree),
@@ -164,4 +184,4 @@ if __name__ == "__main__":
         else:
             print("Invalid choice")
             sleep(2)
-        # print('\n'*10)
+        print('\n'*10)
