@@ -1,6 +1,6 @@
 from sys import exit
 from time import sleep
-
+from random import seed, randint
 
 class Node:
     def __init__(self, val=None, left=None, right=None):
@@ -125,6 +125,12 @@ if __name__ == "__main__":
                 print("Invalid value. Must be 1-{}".format(max_val - min_val))
 
         # Create the tree 
+        seed(1)
+        node_vals = []
+        while len(node_vals) < num_nodes:
+            r = randint(min_val, max_val)
+            if r not in node_vals:
+                tree.add_val(r)
         
 
     def add_val(tree):
@@ -137,7 +143,7 @@ if __name__ == "__main__":
         pass
 
     def print_tree(tree):
-        pass
+        tree.show()
 
     menu = {
         "1": ("Create a random tree", create_tree),
