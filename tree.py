@@ -134,6 +134,49 @@ class Tree:
         print('Tree has {} nodes'.format(len(self.nodes)))
         input('Press enter to return.')
 
+    def navigate(self, current):
+        cont = True
+        while cont:
+            print("\n"*10)
+            print("*******************************")
+            print('{:^22}'.format(current.value), '\n')
+            if current.left is not None: 
+                print('{:<11}'.format(current.left.value), end='') 
+            else:
+                print('{:<11}'.format("None"), end='')
+            if current.right is not None:
+                print('{:>11}'.format(current.right.value), end='')
+            else:
+                print('{:>11}'.format("None"), end='')
+            print("\n*******************************")
+            nav = input("""
+(l) Navigate to the left subtree
+(r) Navigate to the right subtree
+(p) Navigate back to parent
+(x) Exit tree navigation
+""")
+            if nav.lower() == "x":
+                return False
+            elif nav.lower() == "p":
+                if current.value == self.root.value:
+                    print("Root node has no parent")
+                    continue
+                else:
+                    return True
+            elif nav.lower() == "l":
+                if current.left:
+                    cont = self.navigate(current.left)
+                else:
+                    print("No left subtree exists")
+                    sleep(1)
+            elif nav.lower() == "r":
+                if current.right:
+                    cont = self.navigate(current.right)
+                else:
+                    print("No right subtree exists")
+                    sleep(1)
+
+
 
 if __name__ == "__main__":
     tree = Tree()
@@ -194,22 +237,32 @@ if __name__ == "__main__":
         print()
         input("Press enter to continue.")
 
+    def nav_tree():
+        if tree.root:
+            print('\n'*10)
+            tree.navigate(tree.root)
+        else:
+            print("There is no tree to navigate")
+            sleep(2)
+
     menu = {
         "1": ("Create a random tree", create_tree),
         "2": ("Add a value to the tree", add_val),
         "3": ("Remove a value from the tree", del_val),
         "4": ("Determine if a value is in the tree", find_val),
         "5": ("Print the tree", print_tree),
-        "6": ("Exit", exit)
+        "6": ("Navigate the tree", nav_tree),
+        "x": ("Exit", exit)
     }
     while True:
         print("************************************")
         for key in sorted(menu.keys()):
             print(key, ": ", menu[key][0])
         opt = input("Make a selection: ")
-        func = menu.get(opt)
-        if func:
-            func[1]()
+        if opt in menu.keys():
+            func = menu.get(opt)
+            if func:
+                func[1]()
         else:
             print("Invalid choice")
             sleep(2)
