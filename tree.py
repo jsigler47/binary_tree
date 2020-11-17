@@ -26,16 +26,44 @@ class Tree:
     def seek(self, val, current):
         if current:
             if val == current.value:
-                return True
+                return current
             elif val < current.value:
                 return self.seek(val, current.left)
             elif val > current.value:
                 return self.seek(val, current.right)
         else:
-            return False
+            return None
 
-    def del_val(self, val):
-        pass
+    def del_val(self, val, current):
+        if not current:
+            return None
+        if val < current.value:
+            current.left = self.del_val(val, current.left)
+        elif val > current.value:
+            current.right = self.del_val(val, current.right)
+        else:
+            # Current has just one or no children
+            if current.left is None:
+                save = current.right
+                current = None
+                return save
+            elif current.right is None:
+                save = current.left
+                current = None
+                return save
+            # Current has two children
+            sucessor = right_tree_min(current.right)
+            current.value = sucessor.value
+            current.right = self.del_val(sucessor.value, current.right)
+
+        return current
+
+
+    def right_tree_min(self, current):
+        while current.left is not None:
+            current = current.left
+        return current
+
 
     def add_val(self, val):
         if self.root == None:
@@ -149,7 +177,8 @@ if __name__ == "__main__":
         tree.add_val(int(val))
 
     def del_val():
-        pass
+        val = input("Enter a value to delete from the tree: ")
+        tree.del_val(int(val), tree.root)
 
     def find_val():
         val = input("Enter a value to search for in tree: ")
